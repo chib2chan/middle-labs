@@ -1,0 +1,269 @@
+﻿<Window x:Class="MovieRating.View.MainWindow"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MovieRating" xmlns:viewmodel="clr-namespace:MovieRating.ViewModel"
+        d:DataContext="{d:DesignInstance Type=viewmodel:MainViewModel}"
+        mc:Ignorable="d"
+        Title="ФильмоОценкаРус"
+        Height="500" Width="800"
+        Icon="/Movie_Studio_30032.ico"
+        Background="#FFF2FFE4">
+
+    <!-- Делим на столбцы и колонки -->
+    <Grid x:Name="layoutGrid">
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Основная таблица -->
+        <GroupBox Grid.Row="0"
+                  Grid.Column="0"
+                  Header="Ваша фильмотека"
+                  Margin="5,5,1,5" Cursor="Hand">
+
+            <StackPanel>
+
+                <DataGrid ItemsSource="{Binding FilteredMovies}" 
+                            SelectedItem="{Binding SelectedMovie}" 
+                            AutoGenerateColumns="False" 
+                            Margin="5">
+
+                        <DataGrid.Columns>
+
+                            <DataGridTextColumn Header="Название"
+                            Binding="{Binding Title}"/>
+
+                            <DataGridTextColumn Header="Жанр"
+                            Binding="{Binding Genre}"/>
+
+                            <DataGridTextColumn Header="Год"
+                            Binding="{Binding Year}"/>
+
+                            <DataGridTextColumn Header="Режиссёр"
+                            Binding="{Binding DirectorName}"/>
+
+                            <DataGridTextColumn Header="Рейтинг"
+                            Binding="{Binding Rating}"/>
+                            
+                        </DataGrid.Columns>
+                        
+                    </DataGrid>
+                                    
+            </StackPanel>
+
+        </GroupBox>
+
+        <!-- Добавление/удаление фильмов -->
+        <GroupBox Grid.Row="0"
+                  Grid.Column="1"
+                  Header="Добавить/Удалить фильм из фильмотеки"
+                  Margin="5,5,5,5">
+
+            <StackPanel Margin="5">
+
+                <StackPanel Orientation="Horizontal"
+                            Margin="2">
+
+                    <!--для текста-->
+                    <StackPanel Orientation="Vertical">
+                        
+                        <TextBlock Text="Название фильма(Введите)"
+                                   Margin="10,7,0,0"/>
+                        
+                        <TextBlock Text="Жанр фильма (Выберите)"
+                                   Margin="10,7,0,0"/>
+                        
+                        <TextBlock Text="Год релиза (только год)"
+                                   Margin="10,7,0,0"/>
+                        
+                        <TextBlock Text="Режиссер (ФИ)"
+                                   Margin="10,7,0,0"/>
+                        
+                        <TextBlock Text="Рейтинг фильма (от 0 до 10)"
+                                   Margin="10,7,0,0"/>
+                        
+                        <Button Content="Добавить"
+                                Command="{Binding AddMovieCommand}"
+                                Margin="10, 10, 10, 10"
+                                Cursor="Hand"
+                                Background="#FFCFFF9C"/>
+                        
+                        <Button Content="Сброс всех фильтров"
+                                Command="{Binding ResetCommand}"
+                                Margin="10, 5, 10, 10"
+                                Width="150"
+                                Cursor="Hand"
+                                Background="#FFCFFF9C"/>
+                        
+                    </StackPanel>
+
+                    <!--для текст боксов-->
+                    <StackPanel Orientation="Vertical">
+                        
+                        <TextBox Text="{Binding NewTitle, UpdateSourceTrigger=PropertyChanged}" 
+                                 Margin="10,5,0,0" />
+                        
+                        <ComboBox  ItemsSource="{Binding Genres}" 
+                                   SelectedItem="{Binding NewGenre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                   Margin="10,5,0,0"
+                                   Cursor="Hand"
+                                   Background="#FFCFFF9C"/>
+                        
+                        <TextBox Text="{Binding NewYear, UpdateSourceTrigger=PropertyChanged}" 
+                                 Margin="10,5,0,0" />
+                        
+                        <TextBox Text="{Binding NewDirector, UpdateSourceTrigger=PropertyChanged}"
+                                 Margin="10,5,0,0" />
+                        
+                        <TextBox Text="{Binding NewRating, UpdateSourceTrigger=PropertyChanged}"
+                                 Margin="10,5,0,0" />
+                        
+                        <Button Content="Удалить"
+                                Command="{Binding RemoveMovieCommand}"
+                                Margin="10, 5, 10, 10"
+                                Width="150"
+                                Cursor="Hand"
+                                Background="#FFCFFF9C"/>
+                        
+                    </StackPanel>
+
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+
+        <!-- Фильтрация внутри фильмотеки -->
+        <GroupBox Grid.Row="1"
+                  Grid.Column="0"
+                  Header="Фильтры"
+                  Margin="5,5,1,5">
+
+            <StackPanel Orientation="Horizontal">
+                
+                <!--подколонка 1-->
+                <StackPanel Orientation="Vertical">
+                    
+                    <TextBlock Text="Определите жанр:"
+                               Margin="5, 5"/>
+                    
+                    <TextBlock Text="Выберите период времени:"
+                               Margin="5, 30"/>
+                    
+                    <TextBlock Text="Сортировка по рейтингу:"
+                               Margin="5, 15"/>
+                    
+                </StackPanel>
+
+                <!--подколонка 2-->
+                <StackPanel Orientation="Vertical">
+                    
+                    <ComboBox ItemsSource="{Binding Genres}"
+                              SelectedItem="{Binding SearchGenre}"
+                              Margin="5, 0"
+                              Cursor="Hand"
+                              Background="#FFCFFF9C"/>
+                    
+                    <Button Content="Применить фильтр по жанру"
+                            Command="{Binding SortByGenreCommand}"
+                            Margin="5, 5"
+                            Cursor="Hand"
+                            Background="#FFCFFF9C"/>
+
+                    <!--строчка внутри колонки-->
+                    <StackPanel Orientation="Horizontal"
+                                Margin="5, 5">
+                        
+                        <TextBox Text="{Binding YearFrom, UpdateSourceTrigger=PropertyChanged}"
+                                 HorizontalAlignment="Center"
+                                 Margin="1"
+                                 Width="50"/>
+                        
+                        <TextBlock Text="—"
+                                   HorizontalAlignment="Center"
+                                   Margin="1"/>
+                        
+                        <TextBox Text="{Binding YearTo, UpdateSourceTrigger=PropertyChanged}"
+                                 HorizontalAlignment="Center"
+                                 Margin="1"
+                                 Width="50"/>
+                    
+                    </StackPanel>
+
+                    <Button Content="Применить фильтры по времени"
+                            Command="{Binding SortByPeriodCommand}"
+                            Margin="5, 5"
+                            Background="#FFCFFF9C"/>
+                    
+                    <!--строчка внутри колонки-->
+                    <StackPanel Orientation="Horizontal"
+                                Margin="5, 5"
+                                HorizontalAlignment="Center">
+
+                        <Button Content="По убыванию"
+                                Command="{Binding SortedByDescendingCommand}"
+                                Margin="5,1"
+                                Cursor="Hand"
+                                Background="#FFCFFF9C"/>
+
+                        <Button Content="По возрастанию" 
+                                Command="{Binding SortedByAscendingCommand}"
+                                Margin="5,1"
+                                Cursor="Hand"
+                                Background="#FFCFFF9C"/>
+
+                    </StackPanel>
+
+                    <Button Content="Инструкция"
+                            Command="{Binding ShowMessageCommand}"
+                            Margin="10,10,10,10"
+                            Background="#FFCFFF9C"/>
+
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+
+        <!-- Таблица для режиссеров -->
+        <GroupBox Grid.Row="1"
+                  Grid.Column="1"
+                  Header="Режиссёры"
+                  Margin="5,5,5,5">
+
+            <StackPanel Cursor="Hand">
+                <DataGrid ItemsSource="{Binding Directors}"
+                              SelectedItem="{Binding Directors}" 
+                              AutoGenerateColumns="False"
+                              Margin="5">
+
+                    <DataGrid.Columns>
+
+                        <DataGridTextColumn Header="Режиссёр"
+                                                Binding="{Binding Name}"/>
+
+                        <DataGridTextColumn Header="Счетчик фильмов"
+                                                Binding="{Binding MoviesCount}"/>
+
+                        <DataGridTextColumn Header="Рейтинг фильмов"
+                                                Binding="{Binding AverageRating}"/>
+
+                        <DataGridTextColumn Header="Начало активности" 
+                                                Binding="{Binding StartYear}"/>
+
+                        <DataGridTextColumn Header="Конец активности"
+                                                Binding="{Binding EndYear}"/>
+
+                    </DataGrid.Columns>
+                </DataGrid>
+
+            </StackPanel>
+        </GroupBox>
+    </Grid>
+</Window>
