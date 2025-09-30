@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using _2sem4lab;
+
+namespace _2sem4lab
+{
+    /// <summary>
+    /// класс "Посетитель"
+    /// </summary>
+    public class Customer
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public double Balance { get; set; }
+    }
+}
